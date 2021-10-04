@@ -5,6 +5,7 @@ data/**/**
 .vscode/**
 **/wp-content/languages/*.json
 .php_cs.cache
+/build/php/auth.json
 /htdocs/app/etc/config.php
 /htdocs/app/etc/env.php
 /htdocs/default-configs/env.php
