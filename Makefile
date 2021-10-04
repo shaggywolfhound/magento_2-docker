@@ -85,9 +85,9 @@ provision-containers:
 	docker exec -it php-m2 bash -c "cp package.json default-configs/"
 	##configure grunt
 	docker exec -it php-m2 bash -c "cp Gruntfile.js.sample Gruntfile.js"
-	docker exec -it php-m2 bash -c "cp Gruntfile.js default-configs/"
+	docker exec -it php-m2 bash -c "cp Gruntfile.js default-configs/Gruntfile.js"
 	docker exec -it php-m2 bash -c "cp grunt-config.json.sample grunt-config.json"
-	docker exec -it php-m2 bash -c "cp grunt-config.json default-configs/"
+	docker exec -it php-m2 bash -c "cp grunt-config.json default-configs/grunt-config.json"
 	##Copy files to local directories
 	cp -rf ./htdocs/default-configs/composer.json ./htdocs/
 	cp -rf ./htdocs/default-configs/composer.lock ./htdocs/
