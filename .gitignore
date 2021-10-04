@@ -8,3 +8,12 @@ data/**/**
 /htdocs/app/etc/config.php
 /htdocs/app/etc/env.php
 /htdocs/default-configs/env.php
+/htdocs/default-configs/pub/index.php
+/htdocs/default-configs/.htaccess
+/htdocs/default-configs/composer.json
+/htdocs/default-configs/composer.lock
+/htdocs/default-configs/config.php
+/htdocs/default-configs/grunt-config.json
+/htdocs/default-configs/Gruntfile.js
+/htdocs/default-configs/index.php
+/htdocs/default-configs/package.json
