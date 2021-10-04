@@ -1,0 +1,7 @@
+.idea/
+data/
+data/**
+data/**/**
+.vscode/**
+**/wp-content/languages/*.json
+.php_cs.cache

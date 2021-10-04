@@ -1,0 +1,130 @@
+version: '3'
+services:
+
+  php-m2-local:
+    container_name: php-m2-local
+    image: php-m2-local
+    tmpfs:
+    - /var/www/magento2/generated
+    volumes:
+      #storage
+      - m2_dockers_data:/opt/docker:delegated
+      - m2_data:/var/www/magento2:delegated
+      #magento 2 config files
+      - ./htdocs/app/etc/env.php:/var/www/magento2/app/etc/env.php:delegated
+      - ./htdocs/app/etc/config.php:/var/www/magento2/app/etc/config.php:delegated
+      - ./data/pub/media:/var/www/magento2/pub/media:delegated
+      - ./htdocs/.htaccess:/var/www/magento2/.htaccess:delegated
+      - ./htdocs/pub/index.php:/var/www/magento2/pub/index.php:delegated
+#      #module/theme folders
+      - ./htdocs/app/code:/var/www/magento2/app/code:delegated
+      - ./htdocs/app/design:/var/www/magento2/app/design:delegated
+#      #composer files
+      - ./htdocs/composer.json:/var/www/magento2/composer.json:delegated
+      - ./htdocs/composer.lock:/var/www/magento2/composer.lock:delegated
+#      #npm files and grunt
+      - ./htdocs/package.json:/var/www/magento2/package.json:delegated
+      - ./htdocs/Gruntfile.js:/var/www/magento2/Gruntfile.js:delegated
+      - ./htdocs/grunt-config.json:/var/www/magento2/grunt-config.json:delegated
+##might need to create the following files first?
+      - ./htdocs/dev/tools/grunt/configs/local-themes.js:/var/www/magento2/dev/tools/grunt/configs/local-themes.js:delegated
+#      #custom maintenance page
+      - ./htdocs/pub/errors/local.xml:/var/www/magento2/pub/errors/local.xml:delegated
+      - ./htdocs/pub/errors/custom:/var/www/magento2/pub/errors/custom:delegated
+#      #multisite sitemaps setup
+      - ./htdocs/sitemaps:/var/www/magento2/sitemaps:delegated
+      - ./htdocs/sitemaps.php:/var/www/magento2/sitemaps.php:delegated
+#      #multisite robots
+      - ./htdocs/robots.php:/var/www/magento2/robots.php:delegated
+      - ./htdocs/robots.txt:/var/www/magento2/robots.txt:delegated
+#      #vendor folder patching
+      - ./htdocs/patches:/var/www/magento2/patches:delegated
+      - ./htdocs/tools:/var/www/magento2/tools:delegated
+    working_dir: /var/www/magento2
+    depends_on:
+      - mysql-m2
+      - elasticsearch-m2
+    networks:
+      - default-net
+    expose:
+      - "9100"
+      - "1025"
+    ports:
+      - "35729:35729"
+    privileged: true
+    cap_add:
+      - SYS_ADMIN
+      - DAC_READ_SEARCH
+
+
+  apache-m2:
+    build: ./build/apache/
+    container_name: apache-m2
+    image: divanti/apache-m2:v1
+    environment:
+      WEB_DOCUMENT_ROOT: /var/www/magento2/pub
+      WEB_ALIAS_DOMAIN: magento2.local
+      WEB_PHP_SOCKET: php-m2-local:9100
+    volumes:
+      - m2_data:/var/www/magento2:delegated
+      - ./htdocs/app/code:/var/www/magento2/app/code:delegated
+      - ./htdocs/app/design:/var/www/magento2/app/design:delegated
+      - ./data/pub/media:/var/www/magento2/pub/media:delegated
+      - ./htdocs/.htaccess:/var/www/magento2/.htaccess:delegated
+      - ./htdocs/pub/index.php:/var/www/magento2/pub/index.php:delegated
+      #multisite setup
+      - ./htdocs/vhosts/vhost.conf:/opt/docker/etc/httpd/vhost.conf:delegated
+    working_dir: /var/www/magento2
+    networks:
+      - default-net
+    depends_on:
+      - php-m2-local
+      - mysql-m2
+    ports:
+      - "8001:80"
+      - "444:443"
+
+
+  mysql-m2:
+    build: ./build/mysql/
+    image: divanti/mysql-m2:v1
+    container_name: mysql-m2
+    environment:
+      MYSQL_DATABASE: Magento2
+      MYSQL_USER: magento2
+      MYSQL_PASSWORD: secret
+      MYSQL_ROOT_PASSWORD: root
+    networks:
+      - default-net
+    expose:
+      - "3306"
+    ports:
+      - "33062:3306"
+    volumes:
+      - ./data/db:/var/lib/mysql
+
+
+  elasticsearch-m2:
+    container_name: elasticsearch-m2
+    build: ./build/elasticsearch/
+    image: divanti/elasticsearch-m2:v1
+    networks:
+      - default-net
+    expose:
+      - "9200"
+      - "9300"
+    ports:
+      - "9200:9200"
+      - "9300:9300"
+    environment:
+      - "discovery.type=single-node"
+
+networks:
+  default-net:
+    driver: "bridge"
+
+volumes:
+  m2_data:
+    driver: "local"
+  m2_dockers_data:
+    driver: "local"
