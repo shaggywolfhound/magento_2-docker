@@ -13,7 +13,7 @@ help: ## This help.
 #Variables
 DIR= ${CURDIR}
 
-start: ## start m2
+up: ## start m2
 	docker-compose up -d --remove-orphans
 	make permissions
 	docker-compose exec php-m2-local /bin/bash -c "composer install"
@@ -117,7 +117,7 @@ prune: ## reclaim space for docker
 	docker system prune -f
 	docker image prune -af
 
-stop: ## stop the containers
+down: ## stop the containers
 	docker-compose down -v
 
 destroy-hard: ## destroy the containers and make sure they're removed
