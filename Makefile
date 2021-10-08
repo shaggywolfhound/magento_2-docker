@@ -14,7 +14,7 @@ help: ## This help.
 DIR= ${CURDIR}
 
 up: ## start m2
-	docker-compose up -d --remove-orphans
+	COMPOSE_HTTP_TIMEOUT=600 docker-compose up -d --remove-orphans
 	make permissions
 	docker-compose exec php-m2-local /bin/bash -c "composer install"
 	#added second composer install to apply patches (cweagans/composer-patches needed to apply)
@@ -33,7 +33,7 @@ up: ## start m2
 	docker-compose exec php-m2-local /bin/bash -c "magento admin:user:create --admin-user=\"admin\" --admin-password=\"newpassword1\" --admin-email=\"example@example.com\" --admin-firstname=\"Admin\" --admin-lastname=\"Admin\""
 	make permissions-all
 
-provision-containers:
+provision-containers: ## Lets build this
 	#build required containers
 	##build php-m2 without volumes
 	docker build -t divanti/php-m2:v1 ./build/php/
