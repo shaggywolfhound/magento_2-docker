@@ -7,37 +7,40 @@ services:
     tmpfs:
     - /var/www/magento2/generated
     volumes:
-      #storage
+#     #storage
       - m2_dockers_data:/opt/docker:delegated
       - m2_data:/var/www/magento2:delegated
-      #magento 2 config files
+#     #magento 2 config files
       - ./htdocs/app/etc/env.php:/var/www/magento2/app/etc/env.php:delegated
       - ./htdocs/app/etc/config.php:/var/www/magento2/app/etc/config.php:delegated
       - ./data/pub/media:/var/www/magento2/pub/media:delegated
+#     #apache files
       - ./htdocs/.htaccess:/var/www/magento2/.htaccess:delegated
+      - ./htdocs/pub/.htaccess:/var/www/magento2/pub/.htaccess:delegated
+      - ./htdocs/pub/static/.htaccess:/var/www/magento2/pub/static/.htaccess:delegated
       - ./htdocs/pub/index.php:/var/www/magento2/pub/index.php:delegated
-#      #module/theme folders
+#     #module/theme folders
       - ./htdocs/app/code:/var/www/magento2/app/code:delegated
       - ./htdocs/app/design:/var/www/magento2/app/design:delegated
-#      #composer files
+#     #composer files
       - ./htdocs/composer.json:/var/www/magento2/composer.json:delegated
       - ./htdocs/composer.lock:/var/www/magento2/composer.lock:delegated
-#      #npm files and grunt
+#     #npm files and grunt
       - ./htdocs/package.json:/var/www/magento2/package.json:delegated
       - ./htdocs/Gruntfile.js:/var/www/magento2/Gruntfile.js:delegated
       - ./htdocs/grunt-config.json:/var/www/magento2/grunt-config.json:delegated
-##might need to create the following files first?
+#      #might need to create the following files first?
       - ./htdocs/dev/tools/grunt/configs/local-themes.js:/var/www/magento2/dev/tools/grunt/configs/local-themes.js:delegated
-#      #custom maintenance page
+#     #custom maintenance page
       - ./htdocs/pub/errors/local.xml:/var/www/magento2/pub/errors/local.xml:delegated
       - ./htdocs/pub/errors/custom:/var/www/magento2/pub/errors/custom:delegated
-#      #multisite sitemaps setup
+#     #multisite sitemaps setup
       - ./htdocs/sitemaps:/var/www/magento2/sitemaps:delegated
       - ./htdocs/sitemaps.php:/var/www/magento2/sitemaps.php:delegated
-#      #multisite robots
+#     #multisite robots
       - ./htdocs/robots.php:/var/www/magento2/robots.php:delegated
       - ./htdocs/robots.txt:/var/www/magento2/robots.txt:delegated
-#      #vendor folder patching
+#     #vendor folder patching
       - ./htdocs/patches:/var/www/magento2/patches:delegated
       - ./htdocs/tools:/var/www/magento2/tools:delegated
     working_dir: /var/www/magento2
@@ -47,7 +50,7 @@ services:
     networks:
       - default-net
     expose:
-      - "9100"
+      - "9000"
       - "1025"
     ports:
       - "35729:35729"
@@ -63,8 +66,8 @@ services:
     image: divanti/apache-m2:v1
     environment:
       WEB_DOCUMENT_ROOT: /var/www/magento2/pub
-      WEB_ALIAS_DOMAIN: magento2.local
-      WEB_PHP_SOCKET: php-m2-local:9100
+      WEB_ALIAS_DOMAIN: magento2.divanti.co.uk
+      WEB_PHP_SOCKET: php-m2-local:9000
     volumes:
       - m2_data:/var/www/magento2:delegated
       - ./htdocs/app/code:/var/www/magento2/app/code:delegated
