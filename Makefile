@@ -21,6 +21,7 @@ up: ## start m2
 	@echo "applying custom patches"
 	docker-compose exec php-m2-local /bin/bash -c "composer install"
 	docker-compose exec php-m2-local /bin/bash -c "composer dump-autoload"
+	docker-compose exec php-m2-local /bin/bash -c "magento deploy:mode:set developer"
 	docker-compose exec php-m2-local /bin/bash -c "magento setup:di:compile"
 	docker-compose exec php-m2-local /bin/bash -c "magento setup:upgrade"
 	docker-compose exec php-m2-local /bin/bash -c "magento app:config:import"
@@ -156,3 +157,6 @@ login-php: ## login php server
 
 login-mysql: ## login mysql server
 	docker-compose exec mysql-m2 /bin/bash
+
+tail-logs: ##Follow the logs
+	docker-compose exec php-m2-local /bin/bash -c "tail -f /var/www/magento2/var/log/*"

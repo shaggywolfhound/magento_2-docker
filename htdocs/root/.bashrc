@@ -1,0 +1,5 @@
+alias magento='sudo -u www-data magento --no-ansi'
+alias ll='ls -alh'
+alias dir='ls -alh'
+alias pico='nano -c'
+alias grunt='sudo -u www-data grunt '

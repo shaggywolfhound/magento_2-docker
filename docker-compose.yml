@@ -43,6 +43,10 @@ services:
 #     #vendor folder patching
       - ./htdocs/patches:/var/www/magento2/patches:delegated
       - ./htdocs/tools:/var/www/magento2/tools:delegated
+#     #handy tools/commands
+      - ./htdocs/root/.bashrc:/root/.bashrc:delegated
+      - ./htdocs/root/.nanorc:/root/.nanorc:delegated
+      - ./htdocs/root/nanorc:/root/nanorc:delegated
     working_dir: /var/www/magento2
     depends_on:
       - mysql-m2
