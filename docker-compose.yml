@@ -70,7 +70,7 @@ services:
     image: divanti/apache-m2:v1
     environment:
       WEB_DOCUMENT_ROOT: /var/www/magento2/pub
-      WEB_ALIAS_DOMAIN: magento2.divanti.co.uk
+      WEB_ALIAS_DOMAIN: divanti.local
       WEB_PHP_SOCKET: php-m2-local:9000
     volumes:
       - m2_data:/var/www/magento2:delegated

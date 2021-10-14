@@ -28,7 +28,6 @@ up: ## start m2
 	docker-compose exec php-m2-local /bin/bash -c "magento config:set catalog/search/engine elasticsearch7"
 	docker-compose exec php-m2-local /bin/bash -c "magento config:set catalog/search/elasticsearch7_server_hostname elasticsearch-m2"
 	docker-compose exec php-m2-local /bin/bash -c "magento config:set catalog/search/elasticsearch7_server_port 9200"
-	docker-compose exec php-m2-local /bin/bash -c "magento setup:db-schema:upgrade"
 	docker-compose exec php-m2-local /bin/bash -c "magento setup:upgrade"
 	docker-compose exec php-m2-local /bin/bash -c "magento indexer:reindex"
 	docker-compose exec php-m2-local /bin/bash -c "magento admin:user:create --admin-user=\"admin\" --admin-password=\"newpassword1\" --admin-email=\"example@example.com\" --admin-firstname=\"Admin\" --admin-lastname=\"Admin\""
@@ -36,6 +35,10 @@ up: ## start m2
 
 provision-containers: ## Lets build this
 	#build required containers
+	docker pull php:7.4-fpm-alpine
+	docker pull webdevops/apache-dev:alpine
+	docker pull mysql:8
+	docker pull elasticsearch:7.14.1
 	##build php-m2 without volumes
 	docker build -t divanti/php-m2:v1 ./build/php/
 	##build and bring up container as specified in docker-compose
