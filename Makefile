@@ -169,6 +169,7 @@ sample-data: ##install M2 sample data
 	docker-compose exec php-m2-local /bin/bash -c "composer install"
 	docker-compose exec php-m2-local /bin/bash -c "magento s:up"
 	docker-compose exec php-m2-local /bin/bash -c "magento s:di:c"
+	docker-compose exec php-m2-local /bin/bash -c "magento indexer:reset"
 	docker-compose exec php-m2-local /bin/bash -c "magento di:rei"
 	docker-compose exec php-m2-local /bin/bash -c "magento c:cl"
 
@@ -180,5 +181,6 @@ sample-data-remove:  ##remove M2 sample data
 	docker-compose up -d elasticsearch-m2
 	docker-compose exec php-m2-local /bin/bash -c "magento s:up"
 	docker-compose exec php-m2-local /bin/bash -c "magento s:di:c"
+	docker-compose exec php-m2-local /bin/bash -c "magento indexer:reset"
 	docker-compose exec php-m2-local /bin/bash -c "magento i:rei"
 	docker-compose exec php-m2-local /bin/bash -c "magento c:cl"
