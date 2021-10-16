@@ -28,7 +28,6 @@ up: ## start m2
 	docker-compose exec php-m2-local /bin/bash -c "magento config:set catalog/search/engine elasticsearch7"
 	docker-compose exec php-m2-local /bin/bash -c "magento config:set catalog/search/elasticsearch7_server_hostname elasticsearch-m2"
 	docker-compose exec php-m2-local /bin/bash -c "magento config:set catalog/search/elasticsearch7_server_port 9200"
-	docker-compose exec php-m2-local /bin/bash -c "magento setup:upgrade"
 	docker-compose exec php-m2-local /bin/bash -c "magento indexer:reindex"
 	docker-compose exec php-m2-local /bin/bash -c "magento admin:user:create --admin-user=\"admin\" --admin-password=\"newpassword1\" --admin-email=\"example@example.com\" --admin-firstname=\"Admin\" --admin-lastname=\"Admin\""
 	make permissions-all
@@ -163,3 +162,23 @@ login-mysql: ## login mysql server
 
 tail-logs: ##Follow the logs
 	docker-compose exec php-m2-local /bin/bash -c "tail -f /var/www/magento2/var/log/*"
+
+sample-data: ##install M2 sample data
+	docker-compose exec php-m2-local /bin/bash -c "magento sampledata:deploy"
+	docker-compose exec php-m2-local /bin/bash -c "composer dump-autoload"
+	docker-compose exec php-m2-local /bin/bash -c "composer install"
+	docker-compose exec php-m2-local /bin/bash -c "magento s:up"
+	docker-compose exec php-m2-local /bin/bash -c "magento s:di:c"
+	docker-compose exec php-m2-local /bin/bash -c "magento di:rei"
+	docker-compose exec php-m2-local /bin/bash -c "magento c:cl"
+
+sample-data-remove:  ##remove M2 sample data
+	docker-compose exec php-m2-local /bin/bash -c "magento sampledata:remove"
+	docker-compose exec php-m2-local /bin/bash -c "composer dump-autoload"
+	docker-compose exec php-m2-local /bin/bash -c "composer install"
+	## elastic dies for some reason when doing this
+	docker-compose up -d elasticsearch-m2
+	docker-compose exec php-m2-local /bin/bash -c "magento s:up"
+	docker-compose exec php-m2-local /bin/bash -c "magento s:di:c"
+	docker-compose exec php-m2-local /bin/bash -c "magento i:rei"
+	docker-compose exec php-m2-local /bin/bash -c "magento c:cl"
